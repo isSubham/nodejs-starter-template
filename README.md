@@ -456,8 +456,10 @@ The global error handler (`src/middlewares/error.middleware.ts`) catches everyth
 
 **Subham Haldar**
 
-[![GitHub](https://img.shields.io/badge/GitHub-@Subham07--t-181717?logo=github)](https://github.com/Subham07-t)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-subham--haldar-0A66C2?logo=linkedin)](https://linkedin.com/in/subham-haldar)
+[![Portfolio](https://img.shields.io/badge/Portfolio-000000?style=flat&logo=vercel&logoColor=white)](https://subhamh-portfolio.vercel.app/)
+[![GitHub](https://img.shields.io/badge/GitHub-@Subham07--t-181717?style=flat&logo=github)](https://github.com/Subham07-t)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-isSubham-0A66C2?style=flat&logo=linkedin)](https://www.linkedin.com/in/issubham/)
+[![X](https://img.shields.io/badge/X-_isSubham-000000?style=flat&logo=x&logoColor=white)](https://x.com/_isSubham)
 
 ---
 
