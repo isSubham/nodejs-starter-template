@@ -1,99 +1,150 @@
+<div align="center">
+
 # Node.js Starter Template
 
-A production-grade REST API starter built with **TypeScript**, **Express**, **Prisma** (PostgreSQL), and **JWT authentication**. Designed with the patterns and discipline you see in real-world 4+ YOE engineering work.
+**A production-grade REST API boilerplate built the way senior engineers actually build things.**
 
-[![CI](https://github.com/Subham07-t/nodejs-starter-template/actions/workflows/ci.yml/badge.svg)](https://github.com/Subham07-t/nodejs-starter-template/actions)
-![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-green)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)
+TypeScript · Express · PostgreSQL · Prisma · JWT · Zod · Vitest · Docker
+
+[![CI](https://github.com/Subham07-t/nodejs-starter-template/actions/workflows/ci.yml/badge.svg)](https://github.com/Subham07-t/nodejs-starter-template/actions/workflows/ci.yml)
+![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=nodedotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-5.x-2D3748?logo=prisma&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
----
-
-## ✨ Features
-
-| Category | What's included |
-|---|---|
-| **Language** | TypeScript (strict mode) |
-| **Framework** | Express 4 |
-| **Database** | PostgreSQL via **Prisma ORM** |
-| **Authentication** | JWT — access token (15m) + refresh token (7d) with rotation |
-| **Validation** | **Zod** — schemas colocated with modules, env validated on boot |
-| **Security** | Helmet, CORS (configured), rate limiting (global + auth-specific) |
-| **Logging** | Winston — structured JSON in prod, colorized in dev, daily file rotation |
-| **API Docs** | Swagger UI at `/docs` with JSDoc annotations |
-| **Testing** | Vitest + Supertest — unit + integration tests with real test DB |
-| **Code Quality** | ESLint (TypeScript rules), Prettier, lint-staged |
-| **Git Workflow** | Husky, Commitizen, commitlint (conventional commits), branch naming |
-| **Docker** | Multi-stage `Dockerfile` + `docker-compose` (app + postgres) |
-| **CI** | GitHub Actions — lint → typecheck → test on every push/PR |
+</div>
 
 ---
 
-## 📁 Project Structure
+## Why this template?
+
+Most Node.js starters are either too minimal (a bare Express setup) or too opinionated (a full framework). This one sits in the sweet spot — it's what you'd build on day one at a serious company.
+
+Every decision here has a reason:
+
+- **TypeScript strict mode** — catch bugs at compile time, not in production
+- **Zod for everything** — env validation, request validation, same tool, same mental model
+- **Feature-module architecture** — files live next to what they belong to, scales without restructuring
+- **Repository pattern** — DB queries are isolated, controllers never touch Prisma directly
+- **JWT rotation** — refresh tokens are stored, rotated on use, and revocable
+- **Zero-debt error handling** — one error class, one error catalog, one handler
+
+---
+
+## Stack
+
+| Concern | Choice | Why |
+|---|---|---|
+| Language | TypeScript 5 (strict) | Type safety end-to-end |
+| Framework | Express 4 | Stable, well-understood, minimal magic |
+| Database | PostgreSQL + **Prisma** | Type-safe queries, great migration story |
+| Auth | JWT (access + refresh) | Stateless + revocable, industry standard |
+| Validation | **Zod** | Runtime + compile-time types from one schema |
+| Security | Helmet + CORS + rate limiting | Non-negotiable defaults |
+| Logging | **Winston** + Morgan | Structured JSON in prod, colorized in dev |
+| Testing | **Vitest** + Supertest | Fast, ESM-native, real DB integration tests |
+| API Docs | **Swagger / OpenAPI** | Auto-generated from JSDoc annotations |
+| Container | Docker (multi-stage) | Prod-ready image, separate dev compose |
+| CI | **GitHub Actions** | Lint → typecheck → test on every push |
+
+---
+
+## Project Structure
 
 ```
-src/
-├── app.ts                   # Express app factory (testable, no side effects)
-├── server.ts                # Entry point — server start + graceful shutdown
+nodejs-starter-template/
 │
-├── config/
-│   ├── env.ts               # Zod-validated environment config (fail-fast)
-│   ├── database.ts          # Prisma client singleton
-│   └── swagger.ts           # Swagger/OpenAPI setup
+├── .github/
+│   └── workflows/
+│       └── ci.yml                   # CI: lint → typecheck → test
 │
-├── modules/                 # Feature-first architecture
-│   ├── auth/
-│   │   ├── auth.schema.ts   # Zod input schemas
-│   │   ├── auth.service.ts  # Business logic
-│   │   ├── auth.controller.ts
-│   │   └── auth.routes.ts
-│   └── user/
-│       ├── user.repository.ts  # All DB queries (Prisma) isolated here
-│       ├── user.service.ts
-│       ├── user.controller.ts
-│       ├── user.schema.ts
-│       └── user.routes.ts
+├── prisma/
+│   ├── schema.prisma                # User + RefreshToken models
+│   └── seed.ts                      # Seed admin + test users
 │
-├── middlewares/
-│   ├── authenticate.middleware.ts  # JWT guard + role-based authorize()
-│   ├── validate.middleware.ts      # Zod validation factory
-│   ├── error.middleware.ts         # Global error handler + 404
-│   ├── cors.middleware.ts          # Configured CORS
-│   ├── rateLimiter.middleware.ts   # Global + auth-specific limiters
-│   └── requestId.middleware.ts     # Correlation ID (X-Request-ID)
+├── src/
+│   ├── app.ts                       # Express app factory (side-effect-free, testable)
+│   ├── server.ts                    # Entry point: start + graceful shutdown
+│   │
+│   ├── config/
+│   │   ├── env.ts                   # Zod-validated env — fails at boot if invalid
+│   │   ├── database.ts              # Prisma client singleton (test/dev/prod aware)
+│   │   └── swagger.ts               # Swagger UI + OpenAPI JSON endpoint
+│   │
+│   ├── modules/                     # Feature-first: each module owns its full slice
+│   │   ├── auth/
+│   │   │   ├── auth.schema.ts       # Zod: RegisterSchema, LoginSchema, RefreshSchema
+│   │   │   ├── auth.service.ts      # register / login / refreshTokens / logout / logoutAll
+│   │   │   ├── auth.controller.ts   # Thin HTTP handlers + Swagger JSDoc
+│   │   │   └── auth.routes.ts       # Routes with rate limiting + validation middleware
+│   │   │
+│   │   └── user/
+│   │       ├── user.schema.ts       # Zod: UpdateProfile, UserListQuery, UserIdParam
+│   │       ├── user.repository.ts   # All Prisma queries — controllers never touch DB
+│   │       ├── user.service.ts      # getMe / listUsers / updateProfile
+│   │       ├── user.controller.ts   # Thin HTTP handlers + Swagger JSDoc
+│   │       └── user.routes.ts       # Routes with auth + RBAC guards
+│   │
+│   ├── middlewares/
+│   │   ├── authenticate.middleware.ts  # JWT guard → populates req.user
+│   │   ├── validate.middleware.ts      # Zod middleware factory (body/query/params)
+│   │   ├── error.middleware.ts         # Global error handler + 404 handler
+│   │   ├── cors.middleware.ts          # Origin whitelist from env
+│   │   ├── rateLimiter.middleware.ts   # Global limiter + strict auth limiter
+│   │   └── requestId.middleware.ts     # X-Request-ID correlation ID
+│   │
+│   ├── lib/
+│   │   ├── errors/
+│   │   │   ├── AppError.ts          # Base error: code, statusCode, isOperational
+│   │   │   └── errors.ts            # BadRequest, Unauthorized, NotFound, Conflict …
+│   │   ├── response/
+│   │   │   ├── httpStatus.ts        # HttpStatusCode enum
+│   │   │   └── response.ts          # sendSuccess / sendCreated / sendError + types
+│   │   └── logger/
+│   │       ├── logger.ts            # Winston: JSON prod / colorized dev / silent test
+│   │       └── requestLogger.ts     # Morgan → Winston pipe (skip health polls)
+│   │
+│   ├── routes/
+│   │   ├── index.ts                 # Root API router
+│   │   └── health.routes.ts         # GET /health → uptime + DB ping
+│   │
+│   ├── types/
+│   │   └── express.d.ts             # Augments req.user + req.requestId
+│   │
+│   └── utils/
+│       ├── asyncHandler.ts          # Wraps async route handlers, auto-forwards errors
+│       ├── pagination.ts            # parsePagination + buildPaginationMeta
+│       └── token.util.ts            # signAccessToken / verifyAccessToken / extractBearer
 │
-├── lib/
-│   ├── errors/
-│   │   ├── AppError.ts      # Base error class
-│   │   └── errors.ts        # Error catalog (BadRequest, NotFound, etc.)
-│   ├── response/
-│   │   ├── httpStatus.ts    # HTTP status enum
-│   │   └── response.ts      # sendSuccess / sendError / sendCreated
-│   └── logger/
-│       ├── logger.ts        # Winston logger
-│       └── requestLogger.ts # Morgan → Winston HTTP log pipe
+├── tests/
+│   ├── setup.ts                     # Migrate + clean DB before/after each test
+│   ├── integration/
+│   │   ├── auth.test.ts             # register / login / refresh / protected routes
+│   │   └── health.test.ts           # Health endpoint + request ID propagation
+│   └── unit/
+│       └── token.util.test.ts       # JWT sign/verify/tamper + Bearer extraction
 │
-├── routes/
-│   ├── index.ts             # Root router
-│   └── health.routes.ts     # GET /health (uptime + DB ping)
-│
-├── types/
-│   └── express.d.ts         # req.user, req.requestId augmentation
-│
-└── utils/
-    ├── asyncHandler.ts      # Async route error wrapper
-    ├── pagination.ts        # parsePagination + buildPaginationMeta
-    └── token.util.ts        # JWT sign/verify helpers
+├── .env.example                     # All env vars documented with comments
+├── .eslintrc.json                   # TypeScript-aware ESLint (type-checked rules)
+├── .prettierrc                      # Formatting config
+├── commitlint.config.js             # Conventional commits enforcement
+├── docker-compose.yml               # App + Postgres with health checks
+├── Dockerfile                       # Multi-stage build (builder → production)
+├── nodemon.json                     # Dev: tsx watch on .ts files
+├── tsconfig.json                    # Strict TS (ES2022, CommonJS output)
+├── tsconfig.eslint.json             # Extended tsconfig for lint coverage of tests/
+└── vitest.config.ts                 # Vitest: globals, coverage, path aliases
 ```
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
-- Node.js ≥ 20
-- PostgreSQL 14+
-- npm
+
+- **Node.js** ≥ 20
+- **PostgreSQL** 14+ (or use Docker Compose)
+- **npm**
 
 ### 1. Clone & Install
 
@@ -103,132 +154,313 @@ cd nodejs-starter-template
 npm install
 ```
 
-### 2. Environment Setup
+### 2. Configure Environment
 
 ```sh
 cp .env.example .env
-# Fill in DATABASE_URL, JWT secrets, etc.
 ```
 
-### 3. Database Setup
+Open `.env` and fill in the required values. The server **will not start** if any required variable is missing — this is intentional (fail-fast).
+
+```env
+# Minimum required to run locally
+DATABASE_URL=postgresql://postgres:password@localhost:5432/starter_db
+JWT_ACCESS_SECRET=your-access-secret-min-16-chars
+JWT_REFRESH_SECRET=your-refresh-secret-min-16-chars
+PORT=8000
+```
+
+### 3. Set Up the Database
 
 ```sh
-npm run db:migrate    # Run migrations
-npm run db:seed       # Seed default users
+npm run db:migrate   # Create tables via Prisma migrations
+npm run db:seed      # Insert seed users (admin + regular)
 ```
 
-### 4. Start Development Server
+### 4. Start the Dev Server
 
 ```sh
 npm run dev
 ```
 
-Server starts at `http://localhost:8000`  
-API docs at `http://localhost:8000/docs`  
-Health check at `http://localhost:8000/api/v1/health`
+| URL | What |
+|---|---|
+| `http://localhost:8000/api/v1/health` | Health check |
+| `http://localhost:8000/docs` | Swagger UI |
+| `http://localhost:8000/docs.json` | Raw OpenAPI spec |
 
 ---
 
-## 🐳 Docker
+## Docker
+
+The fastest way to get everything running with no local Postgres setup:
 
 ```sh
-# Start app + postgres
+# Start both the API and Postgres
 docker-compose up
 
-# First time: run migrations
+# First time only — run migrations and seed
 docker-compose exec app npm run db:migrate
 docker-compose exec app npm run db:seed
 ```
 
+The [`Dockerfile`](./Dockerfile) uses a **multi-stage build**:
+- `builder` stage: compiles TypeScript, generates Prisma client
+- `production` stage: copies only the compiled output + prod deps, runs as a non-root user
+
 ---
 
-## 🧪 Testing
+## Authentication Flow
 
-```sh
-npm test               # Run all tests once
-npm run test:watch     # Watch mode
-npm run test:coverage  # With coverage report
+This template implements the **dual-token JWT pattern** used in production applications:
+
+```
+POST /api/v1/auth/register   → 201 { user }
+POST /api/v1/auth/login      → 200 { accessToken, refreshToken, user }
+
+  accessToken  expires in 15 minutes
+  refreshToken expires in 7 days, stored in DB
+
+POST /api/v1/auth/refresh    → 200 { accessToken, refreshToken }
+  Old refresh token is deleted (rotation), new pair is issued.
+  Stolen refresh tokens cannot be reused.
+
+POST /api/v1/auth/logout     → 200  (invalidates one refresh token)
+POST /api/v1/auth/logout-all → 200  (revokes all sessions for the user)
 ```
 
-Integration tests use a separate test database (`TEST_DATABASE_URL`).
+**Using the access token:**
+```sh
+curl -H "Authorization: Bearer <accessToken>" http://localhost:8000/api/v1/users/me
+```
 
 ---
 
-## 📋 Available Scripts
+## API Reference
 
-| Script | Description |
-|---|---|
-| `npm run dev` | Start with hot-reload (nodemon + tsx) |
-| `npm run build` | Compile TypeScript |
-| `npm start` | Run compiled production build |
-| `npm run typecheck` | Type-check without emitting |
-| `npm run lint` | Lint all TypeScript files |
-| `npm run lint:fix` | Lint + auto-fix |
-| `npm run format` | Format with Prettier |
-| `npm test` | Run test suite |
-| `npm run db:migrate` | Run Prisma migrations (dev) |
-| `npm run db:migrate:prod` | Deploy migrations (production) |
-| `npm run db:seed` | Seed the database |
-| `npm run db:studio` | Open Prisma Studio |
-| `npm run commit` | Interactive conventional commit |
+### Auth
 
----
-
-## 🔐 API Endpoints
-
-### Auth (Public)
-| Method | Path | Description |
-|---|---|---|
-| `POST` | `/api/v1/auth/register` | Register new user |
-| `POST` | `/api/v1/auth/login` | Login (returns access + refresh tokens) |
-| `POST` | `/api/v1/auth/refresh` | Rotate refresh token |
-| `POST` | `/api/v1/auth/logout` | Invalidate refresh token |
-
-### Auth (Protected)
-| Method | Path | Description |
-|---|---|---|
-| `POST` | `/api/v1/auth/logout-all` | Revoke all sessions |
-
-### Users (Protected)
-| Method | Path | Role | Description |
+| Method | Endpoint | Auth | Description |
 |---|---|---|---|
-| `GET` | `/api/v1/users/me` | Any | Get own profile |
-| `GET` | `/api/v1/users` | Admin | List all users (paginated) |
-| `GET` | `/api/v1/users/:id` | Admin | Get user by ID |
-| `PATCH` | `/api/v1/users/:id` | Owner or Admin | Update profile |
+| `POST` | `/api/v1/auth/register` | Public | Create account |
+| `POST` | `/api/v1/auth/login` | Public | Login, get token pair |
+| `POST` | `/api/v1/auth/refresh` | Public | Rotate refresh token |
+| `POST` | `/api/v1/auth/logout` | Public | Invalidate a refresh token |
+| `POST` | `/api/v1/auth/logout-all` | 🔒 User | Revoke all sessions |
+
+### Users
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| `GET` | `/api/v1/users/me` | 🔒 User | Get own profile |
+| `PATCH` | `/api/v1/users/:id` | 🔒 Owner / Admin | Update profile |
+| `GET` | `/api/v1/users` | 🔒 Admin | Paginated user list |
+| `GET` | `/api/v1/users/:id` | 🔒 Admin | Get any user by ID |
 
 ### System
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/api/v1/health` | Health check (uptime + DB status) |
-| `GET` | `/docs` | Swagger UI |
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| `GET` | `/api/v1/health` | Public | Uptime + DB connectivity |
+| `GET` | `/docs` | Public | Swagger UI (dev only) |
 
 ---
 
-## 🧩 Adding a New Module
+## Testing
 
-1. Create `src/modules/<feature>/` with:
-   - `<feature>.schema.ts` — Zod schemas
-   - `<feature>.repository.ts` — Prisma queries
-   - `<feature>.service.ts` — Business logic
-   - `<feature>.controller.ts` — HTTP handlers (thin)
-   - `<feature>.routes.ts` — Route definitions
+```sh
+npm test                # Run all tests once
+npm run test:watch      # Watch mode (re-runs on file change)
+npm run test:coverage   # Generate HTML coverage report
+```
 
-2. Register routes in `src/routes/index.ts`
+**What's tested:**
+
+- `tests/integration/auth.test.ts` — Full auth lifecycle: register → login → refresh → protected route → logout
+- `tests/integration/health.test.ts` — Health endpoint, 404s, request ID propagation
+- `tests/unit/token.util.test.ts` — JWT sign/verify, tamper detection, Bearer extraction edge cases
+
+Integration tests run against a **real test database** (`TEST_DATABASE_URL`). The setup file runs migrations and cleans all tables between tests for full isolation.
 
 ---
 
-## 🌱 Seed Users
+## Scripts
+
+```sh
+npm run dev              # Start dev server with hot reload (nodemon + tsx)
+npm run build            # Compile TypeScript to dist/
+npm start                # Run compiled build (production)
+npm run typecheck        # Type-check without emitting files
+npm run lint             # ESLint on all .ts files
+npm run lint:fix         # ESLint + auto-fix
+npm run format           # Prettier write
+npm run format:check     # Prettier check (used in CI)
+
+npm test                 # Vitest run
+npm run test:watch       # Vitest watch
+npm run test:coverage    # Vitest with coverage (v8)
+
+npm run db:generate      # Re-generate Prisma client after schema changes
+npm run db:migrate       # Create and apply a new migration (dev)
+npm run db:migrate:prod  # Apply existing migrations (production/CI)
+npm run db:seed          # Run prisma/seed.ts
+npm run db:studio        # Open Prisma Studio in browser
+npm run db:reset         # Drop + recreate DB and re-migrate (dev only)
+
+npm run commit           # Interactive conventional commit via Commitizen
+```
+
+---
+
+## Adding a New Module
+
+The pattern is consistent across every module. To add a `post` feature:
+
+**1. Create the module directory:**
+```
+src/modules/post/
+├── post.schema.ts      ← Zod input schemas + inferred types
+├── post.repository.ts  ← All Prisma queries (no DB calls outside this file)
+├── post.service.ts     ← Business logic (calls repository, throws AppErrors)
+├── post.controller.ts  ← HTTP layer (parse req → call service → send response)
+└── post.routes.ts      ← Route defs with middleware (validate, authenticate, authorize)
+```
+
+**2. Register in `src/routes/index.ts`:**
+```ts
+import postRoutes from '../modules/post/post.routes';
+router.use('/posts', postRoutes);
+```
+
+That's it. No global registries, no decorators, no magic.
+
+---
+
+## Environment Variables
+
+All variables are documented in [`.env.example`](./.env.example). The server parses them with Zod on startup and exits with a clear error message if anything is missing or invalid.
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `NODE_ENV` | No | `development` | `development` / `production` / `test` |
+| `PORT` | No | `8000` | Server port |
+| `DATABASE_URL` | **Yes** | — | PostgreSQL connection string |
+| `TEST_DATABASE_URL` | No | — | Separate DB for integration tests |
+| `JWT_ACCESS_SECRET` | **Yes** | — | Min 16 chars |
+| `JWT_ACCESS_EXPIRES_IN` | No | `15m` | Access token TTL |
+| `JWT_REFRESH_SECRET` | **Yes** | — | Min 16 chars |
+| `JWT_REFRESH_EXPIRES_IN` | No | `7d` | Refresh token TTL |
+| `CORS_ALLOWED_ORIGINS` | No | `http://localhost:3000` | Comma-separated origins |
+| `RATE_LIMIT_WINDOW_MS` | No | `900000` | Rate limit window (15 min) |
+| `RATE_LIMIT_MAX` | No | `100` | Max requests per window |
+| `LOG_LEVEL` | No | `debug` | `error` / `warn` / `info` / `debug` |
+| `LOG_DIR` | No | `logs` | Directory for log files |
+
+---
+
+## Seed Accounts
+
+After running `npm run db:seed`:
 
 | Email | Password | Role |
 |---|---|---|
-| admin@example.com | Admin@123 | ADMIN |
-| user@example.com | User@1234 | USER |
+| `admin@example.com` | `Admin@123` | `ADMIN` |
+| `user@example.com` | `User@1234` | `USER` |
+
+---
+
+## Git Workflow
+
+This template enforces a clean, consistent Git workflow out of the box:
+
+- **Commitizen** (`npm run commit`) — interactive prompt for conventional commits
+- **commitlint** — validates commit messages on `commit-msg` hook
+- **lint-staged** — runs ESLint + Prettier only on staged files (fast)
+- **Husky pre-push** — runs `tsc --noEmit` before every push
+- **Branch naming** — enforced via `validate-branch-name`:
+  ```
+  feat/<name>    fix/<name>    hotfix/<name>    chore/<name>    refactor/<name>
+  ```
+
+---
+
+## CI / CD
+
+GitHub Actions runs on every push to `main`/`develop` and on every pull request:
+
+```
+1. Lint & Type Check
+   ├── npm ci
+   ├── prisma generate
+   ├── tsc --noEmit
+   ├── eslint
+   └── prettier --check
+
+2. Tests (with real Postgres service)
+   ├── prisma migrate deploy
+   └── vitest run --coverage
+       └── uploads coverage artifact
+```
+
+See [`.github/workflows/ci.yml`](./.github/workflows/ci.yml).
+
+---
+
+## Logging
+
+Logs are written to `logs/` with daily rotation (20MB max, 14-day retention, gzipped archives).
+
+```
+logs/
+├── error/      # error level only
+├── combined/   # info and above
+└── http/       # HTTP request logs (Morgan)
+```
+
+In **development**: colorized, human-readable output in the terminal.  
+In **production**: structured JSON, no console transport.  
+In **test**: logging is silenced entirely.
+
+Every request gets a **correlation ID** (`X-Request-ID`) that flows through the logger, making it easy to trace a single request across all log lines.
+
+---
+
+## Error Handling
+
+All errors extend `AppError`:
+
+```ts
+throw new NotFoundError('User');           // 404 RESOURCE_NOT_FOUND
+throw new ConflictError('Email taken');    // 409 CONFLICT
+throw new UnauthorizedError();             // 401 UNAUTHORIZED
+throw new ValidationError('Bad input', details); // 422 VALIDATION_ERROR
+```
+
+The global error handler (`src/middlewares/error.middleware.ts`) catches everything, logs operational errors at `warn` and programming errors at `error`, and returns a consistent JSON shape:
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "User not found",
+    "details": { ... },
+    "stack": "..."   ← development only
+  }
+}
+```
 
 ---
 
 ## Author
 
-**Subham Haldar**  
-- GitHub: [@Subham07-t](https://github.com/Subham07-t)
-- LinkedIn: [linkedin.com/in/subham-haldar](https://linkedin.com/in/subham-haldar)
+**Subham Haldar**
+
+[![GitHub](https://img.shields.io/badge/GitHub-@Subham07--t-181717?logo=github)](https://github.com/Subham07-t)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-subham--haldar-0A66C2?logo=linkedin)](https://linkedin.com/in/subham-haldar)
+
+---
+
+## License
+
+[MIT](./LICENSE)
