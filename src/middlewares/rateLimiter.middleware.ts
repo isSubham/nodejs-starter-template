@@ -10,6 +10,7 @@ export const rateLimiter = rateLimit({
   max: env.RATE_LIMIT_MAX,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: () => env.NODE_ENV === 'test',
   handler: (_req, _res, next) => {
     next(new TooManyRequestsError('Too many requests — please try again later'));
   },
@@ -23,6 +24,7 @@ export const authRateLimiter = rateLimit({
   max: 10,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: () => env.NODE_ENV === 'test',
   handler: (_req, _res, next) => {
     next(new TooManyRequestsError('Too many login attempts — please try again in 15 minutes'));
   },
