@@ -87,7 +87,7 @@ jobs:
         run: npm run db:generate
 
       - name: Run migrations
-        run: npm run db:migrate:prod
+        run: npx prisma db push
 
       - name: Run tests with coverage
         run: npm run test:coverage
