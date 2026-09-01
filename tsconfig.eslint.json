@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./dist-eslint",
+    "noEmit": true,
+    "composite": false
+  },
+  "include": ["src/**/*", "tests/**/*", "prisma/**/*"]
+}

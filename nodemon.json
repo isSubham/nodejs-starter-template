@@ -1,7 +1,9 @@
 {
-  "watch": [
-    "scripts","src"
-  ],
-  "ext": ".js",
-  "exec": "npm run lint && node scripts/dev.local.js"
+  "watch": ["src"],
+  "ext": "ts,json",
+  "ignore": ["src/**/*.test.ts", "src/**/*.spec.ts"],
+  "exec": "tsx src/server.ts",
+  "env": {
+    "NODE_ENV": "development"
+  }
 }
