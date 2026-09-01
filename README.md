@@ -6,7 +6,7 @@
 
 TypeScript · Express · PostgreSQL · Prisma · JWT · Zod · Vitest · Docker
 
-[![CI](https://github.com/Subham07-t/nodejs-starter-template/actions/workflows/ci.yml/badge.svg)](https://github.com/Subham07-t/nodejs-starter-template/actions/workflows/ci.yml)
+[![CI](https://github.com/isSubham/nodejs-starter-template/actions/workflows/ci.yml/badge.svg)](https://github.com/isSubham/nodejs-starter-template/actions/workflows/ci.yml)
 ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=nodedotjs&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)
 ![Prisma](https://img.shields.io/badge/Prisma-5.x-2D3748?logo=prisma&logoColor=white)
@@ -149,7 +149,7 @@ nodejs-starter-template/
 ### 1. Clone & Install
 
 ```sh
-git clone https://github.com/Subham07-t/nodejs-starter-template.git
+git clone https://github.com/isSubham/nodejs-starter-template.git
 cd nodejs-starter-template
 npm install
 ```
@@ -457,7 +457,7 @@ The global error handler (`src/middlewares/error.middleware.ts`) catches everyth
 **Subham Haldar**
 
 [![Portfolio](https://img.shields.io/badge/Portfolio-000000?style=flat&logo=vercel&logoColor=white)](https://subhamh-portfolio.vercel.app/)
-[![GitHub](https://img.shields.io/badge/GitHub-@Subham07--t-181717?style=flat&logo=github)](https://github.com/Subham07-t)
+[![GitHub](https://img.shields.io/badge/GitHub-isSubham-181717?style=flat&logo=github)](https://github.com/isSubham)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-isSubham-0A66C2?style=flat&logo=linkedin)](https://www.linkedin.com/in/issubham/)
 [![X](https://img.shields.io/badge/X-_isSubham-000000?style=flat&logo=x&logoColor=white)](https://x.com/_isSubham)
 
