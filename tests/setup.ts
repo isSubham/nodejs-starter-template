@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { execSync } from 'child_process';
 
 // Use a separate test database
 process.env.NODE_ENV = 'test';
@@ -9,7 +8,6 @@ const prisma = new PrismaClient();
 
 // Run migrations before all tests
 beforeAll(async () => {
-  execSync('npx prisma migrate deploy', { stdio: 'inherit' });
   await prisma.$connect();
 });
 
