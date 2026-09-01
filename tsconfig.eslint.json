@@ -6,5 +6,6 @@
     "noEmit": true,
     "composite": false
   },
-  "include": ["src/**/*", "tests/**/*", "prisma/**/*"]
+  "include": ["src/**/*", "tests/**/*", "prisma/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

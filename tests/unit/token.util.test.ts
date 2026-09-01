@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { signAccessToken, verifyAccessToken, signRefreshToken, verifyRefreshToken, extractBearerToken } from '../../src/utils/token.util';
+import {
+  signAccessToken,
+  verifyAccessToken,
+  signRefreshToken,
+  verifyRefreshToken,
+  extractBearerToken,
+} from '../../src/utils/token.util';
 import { UnauthorizedError } from '../../src/lib/errors/errors';
 import { Role } from '@prisma/client';
 

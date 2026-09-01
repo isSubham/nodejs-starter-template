@@ -34,9 +34,6 @@
     },
     {
       "files": ["tests/**/*.ts", "prisma/seed.ts"],
-      "parserOptions": {
-        "project": null
-      },
       "rules": {
         "@typescript-eslint/no-floating-promises": "off",
         "@typescript-eslint/no-unsafe-assignment": "off",

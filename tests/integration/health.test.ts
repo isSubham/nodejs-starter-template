@@ -25,9 +25,7 @@ describe('GET /api/v1/health', () => {
 
   it('should respect incoming X-Request-ID', async () => {
     const customId = 'test-correlation-id-123';
-    const res = await request(app)
-      .get('/api/v1/health')
-      .set('X-Request-ID', customId);
+    const res = await request(app).get('/api/v1/health').set('X-Request-ID', customId);
 
     expect(res.headers['x-request-id']).toBe(customId);
   });

@@ -104,9 +104,7 @@ describe('Auth API', () => {
 
       const { refreshToken } = loginRes.body.data as { refreshToken: string };
 
-      const res = await request(app)
-        .post(`${BASE}/refresh`)
-        .send({ refreshToken });
+      const res = await request(app).post(`${BASE}/refresh`).send({ refreshToken });
 
       expect(res.status).toBe(200);
       expect(res.body.data.accessToken).toBeDefined();
