@@ -28,6 +28,7 @@ Every decision here has a reason:
 - **Repository pattern** — DB queries are isolated, controllers never touch Prisma directly
 - **JWT rotation** — refresh tokens are stored, rotated on use, and revocable
 - **Zero-debt error handling** — one error class, one error catalog, one handler
+- **Agent-ready** — [`AGENTS.md`](./AGENTS.md) documents the module pattern and conventions so Claude Code, Cursor, Copilot, etc. generate code that fits the codebase instead of fighting it
 
 ---
 
@@ -55,8 +56,13 @@ Every decision here has a reason:
 nodejs-starter-template/
 │
 ├── .github/
+│   ├── ISSUE_TEMPLATE/               # Bug report + feature request forms
+│   ├── PULL_REQUEST_TEMPLATE.md
 │   └── workflows/
 │       └── ci.yml                   # CI: lint → typecheck → test
+│
+├── scripts/
+│   └── setup.mjs                    # `npm run setup` — one-time template rename, self-deletes
 │
 ├── prisma/
 │   ├── schema.prisma                # User + RefreshToken models
@@ -125,18 +131,33 @@ nodejs-starter-template/
 │       └── token.util.test.ts       # JWT sign/verify/tamper + Bearer extraction
 │
 ├── .env.example                     # All env vars documented with comments
+├── .editorconfig                    # Consistent indentation/line endings across editors
 ├── .eslintrc.json                   # TypeScript-aware ESLint (type-checked rules)
 ├── .prettierrc                      # Formatting config
+├── AGENTS.md                        # Instructions for AI coding agents (architecture, conventions, commands)
+├── CLAUDE.md                        # Points Claude Code at AGENTS.md
+├── CONTRIBUTING.md                  # Setup + workflow for contributors
 ├── commitlint.config.js             # Conventional commits enforcement
 ├── docker-compose.yml               # App + Postgres with health checks
 ├── Dockerfile                       # Multi-stage build (builder → production)
 ├── nodemon.json                     # Dev: tsx watch on .ts files
 ├── tsconfig.json                    # Strict TS (ES2022, CommonJS output)
 ├── tsconfig.eslint.json             # Extended tsconfig for lint coverage of tests/
-└── vitest.config.ts                 # Vitest: globals, coverage, path aliases
+└── vitest.config.mts                # Vitest: globals, coverage, path aliases
 ```
 
 ---
+
+## Using This Template
+
+Click **Use this template** on GitHub (or `gh repo create my-api --template isSubham/nodejs-starter-template`), then:
+
+```sh
+npm install
+npm run setup   # interactive: renames package.json, README, LICENSE to your project — then deletes itself
+```
+
+Skip `npm run setup` if you'd rather rename things by hand.
 
 ## Getting Started
 
@@ -344,6 +365,7 @@ All variables are documented in [`.env.example`](./.env.example). The server par
 |---|---|---|---|
 | `NODE_ENV` | No | `development` | `development` / `production` / `test` |
 | `PORT` | No | `8000` | Server port |
+| `API_PREFIX` | No | `/api/v1` | Mount path for all API routes |
 | `DATABASE_URL` | **Yes** | — | PostgreSQL connection string |
 | `TEST_DATABASE_URL` | No | — | Separate DB for integration tests |
 | `JWT_ACCESS_SECRET` | **Yes** | — | Min 16 chars |
