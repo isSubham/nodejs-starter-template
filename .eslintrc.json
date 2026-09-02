@@ -47,5 +47,5 @@
       }
     }
   ],
-  "ignorePatterns": ["dist/", "node_modules/", "*.js", "vitest.config.ts"]
+  "ignorePatterns": ["dist/", "node_modules/", "*.js", "vitest.config.mts"]
 }

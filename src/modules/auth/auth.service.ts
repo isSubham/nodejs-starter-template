@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 import { prisma } from '../../config/database';
 import { ConflictError, UnauthorizedError } from '../../lib/errors/errors';
 import { signAccessToken, signRefreshToken, verifyRefreshToken } from '../../utils/token.util';
@@ -103,7 +103,7 @@ export class AuthService {
     role: import('@prisma/client').Role;
     name: string;
   }) {
-    const tokenId = uuidv4();
+    const tokenId = randomUUID();
     const expiresAt = new Date(Date.now() + REFRESH_TOKEN_DAYS * 24 * 60 * 60 * 1000);
 
     const accessToken = signAccessToken({
