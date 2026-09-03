@@ -141,6 +141,7 @@ nodejs-starter-template/
 ├── docker-compose.yml               # App + Postgres with health checks
 ├── Dockerfile                       # Multi-stage build (builder → production)
 ├── nodemon.json                     # Dev: tsx watch on .ts files
+├── SKILLS.md                        # Skills claimed → where they're demonstrated in the code
 ├── tsconfig.json                    # Strict TS (ES2022, CommonJS output)
 ├── tsconfig.eslint.json             # Extended tsconfig for lint coverage of tests/
 └── vitest.config.mts                # Vitest: globals, coverage, path aliases
